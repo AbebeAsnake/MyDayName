@@ -12,5 +12,12 @@
    Male name  <input id="maleName" type="checkbox" name="male" value="male">
     <input type="submit" value="Submit"/>
 </form>
+
+<form th:action="@{/horoscope}" method="post" th:object="${horoscope}">
+    <span class="text-success">Enter a date (dd/mm/yyyy) </span>
+    <input type="text" name="dateentered"/>
+
+    <input type="submit" value="Submit"/>
+</form>
 </body>
 </html>

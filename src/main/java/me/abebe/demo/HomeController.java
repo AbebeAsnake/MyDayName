@@ -1,9 +1,13 @@
 package me.abebe.demo;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.DateFormat;
@@ -19,6 +23,9 @@ import java.util.Date;
 public class HomeController {
     @Autowired
     DayNamesRepository dayNamesRepository;
+
+    @Autowired
+    ZodiacRepository zodiacRepository;
     @RequestMapping("/")
     public String index(Model model){
         return "prompt";
@@ -39,23 +46,80 @@ public class HomeController {
         //userDate = LocalDate.parse(dates,dTF);
         //DateFormat format2=new SimpleDateFormat("EEEE");
         //String finalDay=format2.format(userDate);
-       // System.out.println(finalDay);
-       //System.out.println(male);
+        // System.out.println(finalDay);
+        //System.out.println(male);
         SimpleDateFormat newDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date MyDate = newDateFormat.parse(dates);
         //newDateFormat.applyPattern("EEEE d MMM yyyy");
         newDateFormat.applyPattern("EEEE");
         String MyDates = newDateFormat.format(MyDate);
+
+        newDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date MyYear = newDateFormat.parse(dates);
+        newDateFormat.applyPattern("yyyy");
+        String MyYears = newDateFormat.format(MyYear);
+        long myyears = Long.parseLong(MyYears);
         System.out.println(MyDates);
-        System.out.println(female);
+        System.out.println(MyYears);
         model.addAttribute("days", dayNamesRepository.findByDays(MyDates));
-        //Iterable<DayNames> days = dayNamesRepository.findByDays(MyDates);
+
+
+        Iterable<Zodiac> zoIt = zodiacRepository.findAll();
+
+       for (Zodiac zos : zoIt)
+       {
+           long id = zos.getId();
+
+       long yearC =zos.getYearStart();
+       System.out.println(zodiacRepository.findById(id));
+       while ( yearC!= myyears || yearC < myyears)
+       {
+             yearC =yearC + 12;
+
+          }
+
+           if( yearC == myyears)
+           {
+               long ids = zos.getId();
+
+               model.addAttribute("foundzod", zodiacRepository.findById(ids));
+           }
+           if(yearC>myyears) {
+           break;
+           }
+       }
+
+
+            //Iterable<DayNames> days = dayNamesRepository.findByDays(MyDates);
         /*LocalDate dt = new LocalDate();
         dt.getDayOfWeek();*/
-        //DayOfWeek dayOfWeek = dateHistory.getUserDate().getDayOfWeek();
-     //DayNames dayNames = new DayNames();
+            //DayOfWeek dayOfWeek = dateHistory.getUserDate().getDayOfWeek();
+            //DayNames dayNames = new DayNames();
 //        if(female.equalsIgnoreCase("female") && male.equalsIgnoreCase("male")){}
-
-       return "showweek";
+            return "showweek";
     }
+    @RequestMapping("/horoscope")
+    public String horoscopes(HttpServletRequest request, Model model) {
+        String s = request.getParameter("dateentered");
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "http://horoscope-api.herokuapp.com/horoscope/today" + s;
+        System.out.println(url);
+       // Horoscope horoscope = restTemplate.getForObject(url, Horoscope.class);
+
+        System.out.println(s);
+     //String xx = horoscope.getValue().getHoroscope();
+
+        return "showweek";
+    }
+@RequestMapping("/know")
+    public @ResponseBody String knows(){
+
+    RestTemplate restTemplate = new RestTemplate();
+    String url = "http://horoscope-api.herokuapp.com/knowmore/libra" ;
+    System.out.println(url);
+    Horoscope horoscope = restTemplate.getForObject(url, Horoscope.class);
+    return  horoscope.getValue().getSunsign();
+
+}
+
 }
