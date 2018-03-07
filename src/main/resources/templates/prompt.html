@@ -8,8 +8,8 @@
 <form th:action="@{/search}" method="post" th:object="${search}">
      <span class="text-success">Enter a date (dd/mm/yyyy) </span>
    <input type="text" name="dateentered"/>
-   Female name  <input id="femaleName" type="checkbox" name="female">
-   Male name  <input id="maleName" type="checkbox" name="male">
+   Female name  <input id="femaleName" type="checkbox" name="female" value="female">
+   Male name  <input id="maleName" type="checkbox" name="male" value="male">
     <input type="submit" value="Submit"/>
 </form>
 </body>

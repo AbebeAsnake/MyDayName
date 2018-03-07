@@ -7,8 +7,8 @@
 <body>
 <table>
     <tr th:each="days : ${days}">
-     <td th:unless="${(female)}" th:inline="text">[[${days.femaleName}]]</td><br/>
-        <td th:unless="${#lists.isEmpty(male)}" th:inline="text"> [[${days.maleName}]]</td>
+     <td th:if="${females== 'female'}" th:inline="text">[[${days.femaleName}]]</td><br/>
+        <td th:if="${males == 'male'}" th:inline="text"> [[${days.maleName}]]</td>
     </tr>
 </table>
 </body>

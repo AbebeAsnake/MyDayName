@@ -47,12 +47,14 @@ public class HomeController {
         newDateFormat.applyPattern("EEEE");
         String MyDates = newDateFormat.format(MyDate);
         System.out.println(MyDates);
+        System.out.println(female);
         model.addAttribute("days", dayNamesRepository.findByDays(MyDates));
         //Iterable<DayNames> days = dayNamesRepository.findByDays(MyDates);
         /*LocalDate dt = new LocalDate();
         dt.getDayOfWeek();*/
         //DayOfWeek dayOfWeek = dateHistory.getUserDate().getDayOfWeek();
      //DayNames dayNames = new DayNames();
+//        if(female.equalsIgnoreCase("female") && male.equalsIgnoreCase("male")){}
 
        return "showweek";
     }
